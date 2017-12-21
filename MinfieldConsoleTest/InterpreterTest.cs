@@ -2,11 +2,6 @@
 using MinefieldEngine;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinefieldConsoleTest
 {
@@ -49,12 +44,32 @@ namespace MinefieldConsoleTest
         [Test]
         public void HandleInput_WithMove_FormatsResult()
         {
-            var moveResult = new MoveResult { Position = new Position(3, 1), Lives = 3, PlayerState = MoveResult.State.Alive, MovesTaken = 2 };
+            var moveResult = new MoveResult { Position = new Position(3, 1), Lives = 3, MoveState = MoveResult.State.Alive, MovesTaken = 2 };
             _mockGame.Setup(game => game.Move(Direction.Right)).Returns(moveResult);
 
             var result = _target.HandleInput("right");
 
             Assert.AreEqual("Moved to position D2, 3 lives remain, 2 moves taken", result);
+            Assert.IsFalse(_target.ExitRequested);
+        }
+
+        [Test]
+        public void HandleInput_WithRubbish_ReturnsHelp()
+        {
+            var result = _target.HandleInput("invalid input");
+
+            Assert.AreEqual("Please enter a direction: 'left', 'right', 'up' or 'down'. Alternatively enter 'exit' to finish.", result);
+            Assert.IsFalse(_target.ExitRequested);
+        }
+
+
+        [Test]
+        public void HandleInput_WithExit_SignalsExit()
+        {
+            var result = _target.HandleInput("exit");
+
+            Assert.IsTrue(_target.ExitRequested);
+            Assert.AreEqual("Exiting game", result);
         }
     }
 }

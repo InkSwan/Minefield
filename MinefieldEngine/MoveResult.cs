@@ -4,11 +4,13 @@
     {
         public enum State
         {
+            NoMove,
             Alive,
             Dead,
-            Succeeded
+            Succeeded,
+            GameOver
         }
-        public State PlayerState { get; set; }
+        public State MoveState { get; set; }
         public int Lives { get; set; }
         public int MovesTaken { get; set; }
         public Position Position { get; set; } = new Position(0, 0);

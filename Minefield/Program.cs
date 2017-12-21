@@ -1,9 +1,6 @@
 ﻿using MinefieldEngine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Minefield
 {
@@ -11,9 +8,10 @@ namespace Minefield
     {
         static void Main(string[] args)
         {
-            var interpreter = new Interpreter(new Game());
+            var game = new Game();
+            var interpreter = new Interpreter(game);
 
-            while(true)
+            while(!(interpreter.ExitRequested || game.Over))
             {
                 var input = Console.ReadLine();
 
@@ -21,6 +19,9 @@ namespace Minefield
 
                 Console.WriteLine(output);
             }
+
+            Console.WriteLine("Bye...");
+            Thread.Sleep(1500);
         }
     }
 }
